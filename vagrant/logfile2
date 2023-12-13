@@ -1,0 +1,485 @@
+Script started on 2023-12-10 21:20:30+03:00 [TERM="xterm-256color" TTY="/dev/pts/3" COLUMNS="140" LINES="17"]
+[?2004h]0;user@intel: ~/Nextcloud/Документы/OTUS/OTUS-Task3/vagrant[01;32muser@intel[00m:[01;34m~/Nextcloud/Документы/OTUS/OTUS-Task3/vagrant[00m$ exitvagrant ssh[7Pexitvagrant ssh
+[?2004lLast login: Sun Dec 10 18:09:16 2023 from 10.0.2.2
+]0;vagrant@lvm:~[?1034h[vagrant@lvm ~]$ exitlsblk[1Pexitsudo -ilvremove /dev/vg_root/lv_root[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csblk[Kvremove /dev/vg_root/lv_root[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo -i[K[3Pexitlsblk[1Pexit[Klsblk
+NAME                       MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                          8:0    0   40G  0 disk 
+├─sda1                       8:1    0    1M  0 part 
+├─sda2                       8:2    0    1G  0 part /boot
+└─sda3                       8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00    253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01    253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol_Home 253:7    0    2G  0 lvm  /home
+sdb                          8:16   0   10G  0 disk 
+sdc                          8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0    253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0   253:3    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sdd                          8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1    253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1   253:5    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sde                          8:64   0    1G  0 disk 
+]0;vagrant@lvm:~[vagrant@lvm ~]$ pvcreate /dev/sdb /sde[K[K[Kdev/sdd[Ke
+  WARNING: Running as a non-root user. Functionality may be unavailable.
+  /run/lvm/lvmetad.socket: access failed: Permission denied
+  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+  /run/lock/lvm/P_orphans:aux: open failed: Permission denied
+  Can't get lock for orphan PVs.
+]0;vagrant@lvm:~[vagrant@lvm ~]$ sudo -i
+]0;root@lvm:~[?1034h[root@lvm ~]# pvcreate /dev/sdb /dev/sde
+  Physical volume "/dev/sdb" successfully created.
+  Physical volume "/dev/sde" successfully created.
+]0;root@lvm:~[root@lvm ~]# pvcreate /dev/sdb /dev/sde[C[1P[1P[1P[1P[1P[1P[1@d[1@e[1@s[1@t[1@r[1@o[1@y
+-bash: pvdestroy: command not found
+]0;root@lvm:~[root@lvm ~]# pvredestroy /dev/sdb /dev/sde[C[C[1P[1P[1P[1P[1P[1P[1P[1@r[1@e[1@m[1@o[1@v[1@e
+  Labels on physical volume "/dev/sdb" successfully wiped.
+  Labels on physical volume "/dev/sde" successfully wiped.
+]0;root@lvm:~[root@lvm ~]# mkfs.btrfs /dev/sdc /dev/sdd -L double_drive[1P[1@b[C[C[C[C[C[C[C[C[C[C[1P[1@e[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[K[K[K[K[K[K[K[Kbtrfs_drive
+btrfs-progs v4.9.1
+See http://btrfs.wiki.kernel.org for more information.
+
+ERROR: not enough free space to allocate chunk
+]0;root@lvm:~[root@lvm ~]# mkfs.btrfs /dev/sdb /dev/sde -L btrfs_drive[C[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1P[1@d[1@b
+btrfs-progs v4.9.1
+See http://btrfs.wiki.kernel.org for more information.
+
+ERROR: superblock magic doesn't match
+Label:              btrfs_drive
+UUID:               ed87b5fe-a1a0-4282-89d7-f28a0e675ded
+Node size:          16384
+Sector size:        4096
+Filesystem size:    10.00GiB
+Block group profiles:
+  Data:             single            8.00MiB
+  Metadata:         DUP               1.00GiB
+  System:           DUP               8.00MiB
+SSD detected:       no
+Incompat features:  extref, skinny-metadata
+Number of devices:  1
+Devices:
+   ID        SIZE  PATH
+    1    10.00GiB  /dev/sdb
+
+]0;root@lvm:~[root@lvm ~]# lsblk
+NAME                       MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                          8:0    0   40G  0 disk 
+├─sda1                       8:1    0    1M  0 part 
+├─sda2                       8:2    0    1G  0 part /boot
+└─sda3                       8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00    253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01    253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol_Home 253:7    0    2G  0 lvm  /home
+sdb                          8:16   0   10G  0 disk 
+sdc                          8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0    253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0   253:3    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sdd                          8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1    253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1   253:5    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sde                          8:64   0    1G  0 disk 
+]0;root@lvm:~[root@lvm ~]# ls /dev/sdb 
+[0m[48;5;232;38;5;11m/dev/sdb[0m
+]0;root@lvm:~[root@lvm ~]# c[Kls .dev[K[K[K[K/dev/
+Display all 151 possibilities? (y or n)
+[root@lvm ~]# ls /dev/[Kv[Kv[K
+[0m[48;5;232;38;5;3mautofs[0m           [48;5;232;38;5;11mdm-0[0m  [48;5;232;38;5;3mhpet[0m          [48;5;10;38;5;16mmqueue[0m              [48;5;232;38;5;3mrandom[0m  [48;5;232;38;5;11msde[0m       [38;5;51mstdout[0m  [48;5;232;38;5;3mtty17[0m  [48;5;232;38;5;3mtty27[0m  [48;5;232;38;5;3mtty37[0m  [48;5;232;38;5;3mtty47[0m  [48;5;232;38;5;3mtty57[0m  [48;5;232;38;5;3mttyS0[0m    [48;5;232;38;5;3mvcsa1[0m
+[38;5;27mblock[0m            [48;5;232;38;5;11mdm-1[0m  [38;5;27mhugepages[0m     [38;5;27mnet[0m                 [38;5;27mraw[0m     [48;5;232;38;5;3msg0[0m       [48;5;232;38;5;3mtty[0m     [48;5;232;38;5;3mtty18[0m  [48;5;232;38;5;3mtty28[0m  [48;5;232;38;5;3mtty38[0m  [48;5;232;38;5;3mtty48[0m  [48;5;232;38;5;3mtty58[0m  [48;5;232;38;5;3mttyS1[0m    [38;5;27mvfio[0m
+[38;5;27mbsg[0m              [48;5;232;38;5;11mdm-2[0m  [48;5;232;38;5;3mhwrng[0m         [48;5;232;38;5;3mnetwork_latency[0m     [38;5;51mrtc[0m     [48;5;232;38;5;3msg1[0m       [48;5;232;38;5;3mtty0[0m    [48;5;232;38;5;3mtty19[0m  [48;5;232;38;5;3mtty29[0m  [48;5;232;38;5;3mtty39[0m  [48;5;232;38;5;3mtty49[0m  [48;5;232;38;5;3mtty59[0m  [48;5;232;38;5;3mttyS2[0m    [48;5;232;38;5;3mvga_arbiter[0m
+[48;5;232;38;5;3mbtrfs-control[0m    [48;5;232;38;5;11mdm-3[0m  [38;5;51minitctl[0m       [48;5;232;38;5;3mnetwork_throughput[0m  [48;5;232;38;5;3mrtc0[0m    [48;5;232;38;5;3msg2[0m       [48;5;232;38;5;3mtty1[0m    [48;5;232;38;5;3mtty2[0m   [48;5;232;38;5;3mtty3[0m   [48;5;232;38;5;3mtty4[0m   [48;5;232;38;5;3mtty5[0m   [48;5;232;38;5;3mtty6[0m   [48;5;232;38;5;3mttyS3[0m    [38;5;27mvg_var[0m
+[38;5;27mchar[0m             [48;5;232;38;5;11mdm-4[0m  [38;5;27minput[0m         [48;5;232;38;5;3mnull[0m                [48;5;232;38;5;11msda[0m     [48;5;232;38;5;3msg3[0m       [48;5;232;38;5;3mtty10[0m   [48;5;232;38;5;3mtty20[0m  [48;5;232;38;5;3mtty30[0m  [48;5;232;38;5;3mtty40[0m  [48;5;232;38;5;3mtty50[0m  [48;5;232;38;5;3mtty60[0m  [48;5;232;38;5;3muhid[0m     [48;5;232;38;5;3mvhci[0m
+[48;5;232;38;5;3mconsole[0m          [48;5;232;38;5;11mdm-5[0m  [48;5;232;38;5;3mkmsg[0m          [48;5;232;38;5;3mnvram[0m               [48;5;232;38;5;11msda1[0m    [48;5;232;38;5;3msg4[0m       [48;5;232;38;5;3mtty11[0m   [48;5;232;38;5;3mtty21[0m  [48;5;232;38;5;3mtty31[0m  [48;5;232;38;5;3mtty41[0m  [48;5;232;38;5;3mtty51[0m  [48;5;232;38;5;3mtty61[0m  [48;5;232;38;5;3muinput[0m   [48;5;232;38;5;3mvhost-net[0m
+[38;5;51mcore[0m             [48;5;232;38;5;11mdm-6[0m  [38;5;13mlog[0m           [48;5;232;38;5;3moldmem[0m              [48;5;232;38;5;11msda2[0m    [48;5;10;38;5;16mshm[0m       [48;5;232;38;5;3mtty12[0m   [48;5;232;38;5;3mtty22[0m  [48;5;232;38;5;3mtty32[0m  [48;5;232;38;5;3mtty42[0m  [48;5;232;38;5;3mtty52[0m  [48;5;232;38;5;3mtty62[0m  [48;5;232;38;5;3murandom[0m  [38;5;27mVolGroup00[0m
+[38;5;27mcpu[0m              [48;5;232;38;5;11mdm-7[0m  [48;5;232;38;5;3mloop-control[0m  [48;5;232;38;5;3mport[0m                [48;5;232;38;5;11msda3[0m    [48;5;232;38;5;3msnapshot[0m  [48;5;232;38;5;3mtty13[0m   [48;5;232;38;5;3mtty23[0m  [48;5;232;38;5;3mtty33[0m  [48;5;232;38;5;3mtty43[0m  [48;5;232;38;5;3mtty53[0m  [48;5;232;38;5;3mtty63[0m  [48;5;232;38;5;3musbmon0[0m  [48;5;232;38;5;3mzero[0m
+[48;5;232;38;5;3mcpu_dma_latency[0m  [38;5;51mfd[0m    [38;5;27mmapper[0m        [48;5;232;38;5;3mppp[0m                 [48;5;232;38;5;11msdb[0m     [38;5;27msnd[0m       [48;5;232;38;5;3mtty14[0m   [48;5;232;38;5;3mtty24[0m  [48;5;232;38;5;3mtty34[0m  [48;5;232;38;5;3mtty44[0m  [48;5;232;38;5;3mtty54[0m  [48;5;232;38;5;3mtty7[0m   [48;5;232;38;5;3mvcs[0m
+[48;5;232;38;5;3mcrash[0m            [48;5;232;38;5;3mfull[0m  [48;5;232;38;5;3mmcelog[0m        [48;5;232;38;5;3mptmx[0m                [48;5;232;38;5;11msdc[0m     [38;5;51mstderr[0m    [48;5;232;38;5;3mtty15[0m   [48;5;232;38;5;3mtty25[0m  [48;5;232;38;5;3mtty35[0m  [48;5;232;38;5;3mtty45[0m  [48;5;232;38;5;3mtty55[0m  [48;5;232;38;5;3mtty8[0m   [48;5;232;38;5;3mvcs1[0m
+[38;5;27mdisk[0m             [48;5;232;38;5;3mfuse[0m  [48;5;232;38;5;3mmem[0m           [38;5;27mpts[0m                 [48;5;232;38;5;11msdd[0m     [38;5;51mstdin[0m     [48;5;232;38;5;3mtty16[0m   [48;5;232;38;5;3mtty26[0m  [48;5;232;38;5;3mtty36[0m  [48;5;232;38;5;3mtty46[0m  [48;5;232;38;5;3mtty56[0m  [48;5;232;38;5;3mtty9[0m   [48;5;232;38;5;3mvcsa[0m
+]0;root@lvm:~[root@lvm ~]# cd\\\\[K[K[K[K[K[Kls /dev/btrfs-control 
+anaconda-ks.cfg  .bash_logout     .bashrc          original-ks.cfg  .tcshrc          
+.bash_history    .bash_profile    .cshrc           .ssh/            
+[root@lvm ~]# ls /dev/btrfs-control [K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kmount /dev/sdb /mnt/
+]0;root@lvm:~[root@lvm ~]# ls /mnt
+]0;root@lvm:~[root@lvm ~]# cp -aR /home/* /mnt/[C[1P[1P[1P[1P[1@o[1@p[1@t
+cp: cannot stat ‘/opt/*’: No such file or directory
+]0;root@lvm:~[root@lvm ~]# ls
+anaconda-ks.cfg  original-ks.cfg
+]0;root@lvm:~[root@lvm ~]# cd ..[K[K/
+]0;root@lvm:/[root@lvm /]# eix[K[Kxit
+logout
+]0;vagrant@lvm:~[vagrant@lvm ~]$ ls
+]0;vagrant@lvm:~[vagrant@lvm ~]$ ls /
+[0m[38;5;51mbin[0m  [38;5;27mboot[0m  [38;5;27mdev[0m  [38;5;27metc[0m  [38;5;27mhome[0m  [38;5;51mlib[0m  [38;5;51mlib64[0m  [38;5;27mmedia[0m  [38;5;27mmnt[0m  [38;5;27mopt[0m  [38;5;27mproc[0m  [38;5;27mroot[0m  [38;5;27mrun[0m  [38;5;51msbin[0m  [38;5;27msrv[0m  [38;5;27msys[0m  [48;5;10;38;5;16mtmp[0m  [38;5;27musr[0m  [38;5;27mvagrant[0m  [38;5;27mvar[0m
+]0;vagrant@lvm:~[vagrant@lvm ~]$ ls[K[Kcp -aR /home/* /mnt/[1P[1P[1P[1P[1@o[1@p[1@t
+cp: cannot stat ‘/opt/*’: No such file or directory
+]0;vagrant@lvm:~[vagrant@lvm ~]$ sudo -i
+]0;root@lvm:~[?1034h[root@lvm ~]# cp -aR /home/* /mnt/[1P[1P[1P[1P[1@o[1@p[1@t
+cp: cannot stat ‘/opt/*’: No such file or directory
+]0;root@lvm:~[root@lvm ~]# cp -aR /opt/* /mnt/[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kls /
+[0m[38;5;51mbin[0m  [38;5;27mboot[0m  [38;5;27mdev[0m  [38;5;27metc[0m  [38;5;27mhome[0m  [38;5;51mlib[0m  [38;5;51mlib64[0m  [38;5;27mmedia[0m  [38;5;27mmnt[0m  [38;5;27mopt[0m  [38;5;27mproc[0m  [38;5;27mroot[0m  [38;5;27mrun[0m  [38;5;51msbin[0m  [38;5;27msrv[0m  [38;5;27msys[0m  [48;5;10;38;5;16mtmp[0m  [38;5;27musr[0m  [38;5;27mvagrant[0m  [38;5;27mvar[0m
+]0;root@lvm:~[root@lvm ~]# cd[K[Kls /opt/
+]0;root@lvm:~[root@lvm ~]# l[Klsblk
+NAME                       MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                          8:0    0   40G  0 disk 
+├─sda1                       8:1    0    1M  0 part 
+├─sda2                       8:2    0    1G  0 part /boot
+└─sda3                       8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00    253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01    253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol_Home 253:7    0    2G  0 lvm  /home
+sdb                          8:16   0   10G  0 disk /mnt
+sdc                          8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0    253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0   253:3    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sdd                          8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1    253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1   253:5    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sde                          8:64   0    1G  0 disk 
+]0;root@lvm:~[root@lvm ~]# cd /opt
+]0;root@lvm:/opt[root@lvm opt]# ls
+]0;root@lvm:/opt[root@lvm opt]# cx.[K[K[Kcp -aR /home/* /mnt/[1P /mnt/[1P /mnt/[1P /mnt/[1P /mnt/[1P /mnt/[1P /mnt/o /mnt/p /mnt/t /mnt/
+]0;root@lvm:/opt[root@lvm opt]# ~]# echo "`blkid | grep Home | awk '{print $2}'`[1P[1P[1P[1P[1@o[1@p[1@t
+> 
+> ^C
+]0;root@lvm:/opt[root@lvm opt]# ~]# echo "`blkid | grep opt | awk '{print $2}'`
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[30Pcp -aR /opt /mnt/
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C~]# echo "`blkid | grep opt | awk '{print $2}'`
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C"
+-bash: ~]#: command not found
+]0;root@lvm:/opt[root@lvm opt]# ~]# echo "`blkid | grep opt | awk '{print $2}'`"[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[C[C[C[C[C[C[C[C[C[C[C[C[C[C`"
+-bash: ~]#: command not found
+]0;root@lvm:/opt[root@lvm opt]# cd /
+]0;root@lvm:/[root@lvm /]# ls
+[0m[38;5;51mbin[0m  [38;5;27mboot[0m  [38;5;27mdev[0m  [38;5;27metc[0m  [38;5;27mhome[0m  [38;5;51mlib[0m  [38;5;51mlib64[0m  [38;5;27mmedia[0m  [38;5;27mmnt[0m  [38;5;27mopt[0m  [38;5;27mproc[0m  [38;5;27mroot[0m  [38;5;27mrun[0m  [38;5;51msbin[0m  [38;5;27msrv[0m  [38;5;27msys[0m  [48;5;10;38;5;16mtmp[0m  [38;5;27musr[0m  [38;5;27mvagrant[0m  [38;5;27mvar[0m
+]0;root@lvm:/[root@lvm /]# blkid
+/dev/sda2: UUID="570897ca-e759-4c81-90cf-389da6eee4cc" TYPE="xfs" 
+/dev/sda3: UUID="vrrtbx-g480-HcJI-5wLn-4aOf-Olld-rC03AY" TYPE="LVM2_member" 
+/dev/sdc: UUID="EpFxcU-ULO2-Phoh-NJnp-T66V-97Em-NHXEaF" TYPE="LVM2_member" 
+/dev/sdd: UUID="1kjaoQ-qzoL-zvMc-EqO9-cBab-YBUf-d3xYmI" TYPE="LVM2_member" 
+/dev/mapper/VolGroup00-LogVol00: UUID="886a3df7-9f88-4522-8646-47ef5d1774b2" TYPE="xfs" 
+/dev/mapper/VolGroup00-LogVol01: UUID="c39c5bed-f37c-4263-bee8-aeb6a6659d7b" TYPE="swap" 
+/dev/mapper/vg_var-lv_var_rimage_0: UUID="e90571be-9dff-4ab0-ae0e-eeba62879bab" TYPE="ext4" 
+/dev/mapper/vg_var-lv_var_rimage_1: UUID="e90571be-9dff-4ab0-ae0e-eeba62879bab" TYPE="ext4" 
+/dev/mapper/vg_var-lv_var: UUID="e90571be-9dff-4ab0-ae0e-eeba62879bab" TYPE="ext4" 
+/dev/mapper/VolGroup00-LogVol_Home: UUID="b7bf2a13-3df8-4099-8bbd-9b7e67a961d6" TYPE="xfs" 
+/dev/sdb: LABEL="btrfs_drive" UUID="ed87b5fe-a1a0-4282-89d7-f28a0e675ded" UUID_SUB="52bf840d-dd87-4011-b039-d35967cbd246" TYPE="btrfs" 
+]0;root@lvm:/[root@lvm /]# echo "`blkid | grep btrfs_drive | awk '{print $2}'` /home btrfs defaults 0 0" >> /etc/fstab
+]0;root@lvm:/[root@lvm /]# cat /etc/fstab [K
+
+#
+# /etc/fstab
+# Created by anaconda on Sat May 12 18:50:26 2018
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/VolGroup00-LogVol00 /                       xfs     defaults        0 0
+UUID=570897ca-e759-4c81-90cf-389da6eee4cc /boot                   xfs     defaults        0 0
+/dev/mapper/VolGroup00-LogVol01 swap                    swap    defaults        0 0
+#VAGRANT-BEGIN
+# The contents below are automatically generated by Vagrant. Do not modify.
+#VAGRANT-END
+UUID="e90571be-9dff-4ab0-ae0e-eeba62879bab" /var ext4 defaults 0 0
+UUID="b7bf2a13-3df8-4099-8bbd-9b7e67a961d6" /home xfs defaults 0 0
+LABEL="btrfs_drive" /home btrfs defaults 0 0
+]0;root@lvm:/[root@lvm /]# vi /etc/fstab 
+[?1049h[?1h=[1;17r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[17;1H"/etc/fstab" 17L, 764C[2;1H#
+# /etc/fstab
+# Created by anaconda on Sat May 12 18:50:26 2018
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/VolGroup00-LogVol00 /[23Cxfs     defaults[8C0 0
+UUID=570897ca-e759-4c81-90cf-389da6eee4cc /boot[19Cxfs     defaults[8C0 0
+/dev/mapper/VolGroup00-LogVol01 swap[20Cswap    defaults[8C0 0
+#VAGRANT-BEGIN
+# The contents below are automatically generated by Vagrant. Do not modify.
+#VAGRANT-END
+UUID="e90571be-9dff-4ab0-ae0e-eeba62879bab" /var ext4 defaults 0 0
+UUID="b7bf2a13-3df8-4099-8bbd-9b7e67a961d6" /home xfs defaults 0 0[1;1H[?12l[?25h
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[?25l[1;16r[16;1H
+[1;17r[16;1HLABEL="btrfs_drive" /home btrfs defaults 0 0[17;1H[K[16;1H[?12l[?25h[?25lABEL="btrfs_drive" /home btrfs defaults 0 0[16;44H[K[16;1H[?12l[?25h[?25lBEL="btrfs_drive" /home btrfs defaults 0 0[16;43H[K[16;1H[?12l[?25h[?25lEL="btrfs_drive" /home btrfs defaults 0 0[16;42H[K[16;1H[?12l[?25h[?25lL="btrfs_drive" /home btrfs defaults 0 0[16;41H[K[16;1H[?12l[?25h[?25l="btrfs_drive" /home btrfs defaults 0 0[16;40H[K[16;1H[?12l[?25h[?25l"btrfs_drive" /home btrfs defaults 0 0[16;39H[K[16;1H[?12l[?25h[?25lbtrfs_drive" /home btrfs defaults 0 0[16;38H[K[16;1H[?12l[?25h[?25ltrfs_drive" /home btrfs defaults 0 0[16;37H[K[16;1H[?12l[?25h[?25lrfs_drive" /home btrfs defaults 0 0[16;36H[K[16;1H[?12l[?25h[?25lfs_drive" /home btrfs defaults 0 0[16;35H[K[16;1H[?12l[?25h[?25ls_drive" /home btrfs defaults 0 0[16;34H[K[16;1H[?12l[?25h[?25l_drive" /home btrfs defaults 0 0[16;33H[K[16;1H[?12l[?25h[?25ldrive" /home btrfs defaults 0 0[16;32H[K[16;1H[?12l[?25h[?25lrive" /home btrfs defaults 0 0[16;31H[K[16;1H[?12l[?25h[?25live" /home btrfs defaults 0 0[16;30H[K[16;1H[?12l[?25h[?25lve" /home btrfs defaults 0 0[16;29H[K[16;1H[?12l[?25h[?25le" /home btrfs defaults 0 0[16;28H[K[16;1H[?12l[?25h[?25l" /home btrfs defaults 0 0[16;27H[K[16;1H[?12l[?25h[?25l /home btrfs defaults 0 0[16;26H[K[16;1H[?12l[?25h[?25lLABEL="btrfs_drive" /home btrfs defaults 0 0[?12l[?25h[?25l /home btrfs defaults 0 0[16;27H[K[16;1H[?12l[?25h[?25l
+[1m-- INSERT --[m[16;2HD_SUB="52bf840d-dd87-4011-b039-d35967cbd246/home btrfs defaults 0 0[16;45H[?12l[?25h[?25l /home btrfs defaults 0 0[16;46H[?12l[?25h/home[?25l btrfs defaults 0 0[16;69H[K[16;50H[?12l[?25h[?25l btrfs defaults 0 0[16;68H[K[16;49H[?12l[?25h[?25l btrfs defaults 0 0[16;67H[K[16;48H[?12l[?25h[?25l btrfs defaults 0 0[16;66H[K[16;47H[?12l[?25h[?25lo btrfs defaults 0 0[16;48H[?12l[?25h[?25lp btrfs defaults 0 0[16;49H[?12l[?25h[?25lt btrfs defaults 0 0[16;50H[?12l[?25h [17;1H[K[16;50H[?25l[?12l[?25h[?25l
+:[?12l[?25hwq[?25l"/etc/fstab" 17L, 788C written
+[?1l>[?12l[?25h[?1049l]0;root@lvm:/[root@lvm /]# rm -rt /opt/
+rm: invalid option -- 't'
+Try 'rm --help' for more information.
+]0;root@lvm:/[root@lvm /]# rm -rt /opt/[C[C[1P /opt/f /opt/
+]0;root@lvm:/[root@lvm /]# ls
+[0m[38;5;51mbin[0m  [38;5;27mboot[0m  [38;5;27mdev[0m  [38;5;27metc[0m  [38;5;27mhome[0m  [38;5;51mlib[0m  [38;5;51mlib64[0m  [38;5;27mmedia[0m  [38;5;27mmnt[0m  [38;5;27mproc[0m  [38;5;27mroot[0m  [38;5;27mrun[0m  [38;5;51msbin[0m  [38;5;27msrv[0m  [38;5;27msys[0m  [48;5;10;38;5;16mtmp[0m  [38;5;27musr[0m  [38;5;27mvagrant[0m  [38;5;27mvar[0m
+]0;root@lvm:/[root@lvm /]# umount /mnt/
+]0;root@lvm:/[root@lvm /]# mount -a
+mount: mount point /opt does not exist
+]0;root@lvm:/[root@lvm /]# lsblk
+NAME                       MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                          8:0    0   40G  0 disk 
+├─sda1                       8:1    0    1M  0 part 
+├─sda2                       8:2    0    1G  0 part /boot
+└─sda3                       8:3    0   39G  0 part 
+  ├─VolGroup00-LogVol00    253:0    0    8G  0 lvm  /
+  ├─VolGroup00-LogVol01    253:1    0  1.5G  0 lvm  [SWAP]
+  └─VolGroup00-LogVol_Home 253:7    0    2G  0 lvm  /home
+sdb                          8:16   0   10G  0 disk 
+sdc                          8:32   0    2G  0 disk 
+├─vg_var-lv_var_rmeta_0    253:2    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_0   253:3    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sdd                          8:48   0    1G  0 disk 
+├─vg_var-lv_var_rmeta_1    253:4    0    4M  0 lvm  
+│ └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+└─vg_var-lv_var_rimage_1   253:5    0  952M  0 lvm  
+  └─vg_var-lv_var          253:6    0  952M  0 lvm  /var
+sde                          8:64   0    1G  0 disk 
+]0;root@lvm:/[root@lvm /]# lsblkmount -aumount /mnt/ls[Krm -rf /opt/t[C[C[C[C[C[Cvi /etc/fstab 
+[?1049h[?1h=[1;17r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[17;1H"/etc/fstab" 17L, 788C[2;1H#
+# /etc/fstab
+# Created by anaconda on Sat May 12 18:50:26 2018
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/VolGroup00-LogVol00 /[23Cxfs     defaults[8C0 0
+UUID=570897ca-e759-4c81-90cf-389da6eee4cc /boot[19Cxfs     defaults[8C0 0
+/dev/mapper/VolGroup00-LogVol01 swap[20Cswap    defaults[8C0 0
+#VAGRANT-BEGIN
+# The contents below are automatically generated by Vagrant. Do not modify.
+#VAGRANT-END
+UUID="e90571be-9dff-4ab0-ae0e-eeba62879bab" /var ext4 defaults 0 0
+UUID="b7bf2a13-3df8-4099-8bbd-9b7e67a961d6" /home xfs defaults 0 0[1;1H[?12l[?25h
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[?25l[1;16r[16;1H
+[1;17r[16;2HD_SUB="52bf840d-dd87-4011-b039-d35967cbd246 /opt btrfs defaults 0 0[17;1H[K[16;1H[?12l[?25h D_SUB="52bf840d-[?25l
+[1m-- INSERT --[16;1H[?12l[?25h[?25l[mU D_SUB="52bf840d-dd87-4011-b039-d35967cbd246 /opt btrfs defaults 0 0U[?12l[?25h[?25lU D_SUB="52bf840d-dd87-4011-b039-d35967cbd246 /opt btrfs defaults 0 0UU[?12l[?25h[?25lI D_SUB="52bf840d-dd87-4011-b039-d35967cbd246 /opt btrfs defaults 0 0UUI[?12l[?25h[?25lD_SUB="52bf840d-dd87-4011-b039-d35967cbd246 /opt btrfs defaults 0 0[16;71H[K[16;4H[?12l[?25hD_SUB[?25l="52bf840d-dd87-4011-b039-d35967cbd246 /opt btrfs defaults 0 0[16;70H[K[16;8H[?12l[?25h[?25l="52bf840d-dd87-4011-b039-d35967cbd246 /opt btrfs defaults 0 0[16;69H[K[16;7H[?12l[?25h[?25l="52bf840d-dd87-4011-b039-d35967cbd246 /opt btrfs defaults 0 0[16;68H[K[16;6H[?12l[?25h[?25l="52bf840d-dd87-4011-b039-d35967cbd246 /opt btrfs defaults 0 0[16;67H[K[16;5H[?12l[?25h="52bf840d-dd87-4011-b039-d35967cbd246 /6[?25l" /opt btrfs defaults 0 0[16;44H[?12l[?25h /opt [17;1H[K[16;49H[?25l[?12l[?25h[?25l
+:[?12l[?25hwq[?25l"/etc/fstab" 17L, 787C written
+[?1l>[?12l[?25h[?1049l]0;root@lvm:/[root@lvm /]# vi /etc/fstab [9Plsblkmount -a
+mount: can't find UUID="52bf840d-dd87-4011-b039-d35967cbd246"
+]0;root@lvm:/[root@lvm /]# mount -avi /etc/fstab [9Plsblkmount -aumount /mnt/[4Pmount -a[3Plsblkvi /etc/fstab [6Pmount -a[Kbk[Klkid
+/dev/sda2: UUID="570897ca-e759-4c81-90cf-389da6eee4cc" TYPE="xfs" 
+/dev/sda3: UUID="vrrtbx-g480-HcJI-5wLn-4aOf-Olld-rC03AY" TYPE="LVM2_member" 
+/dev/sdc: UUID="EpFxcU-ULO2-Phoh-NJnp-T66V-97Em-NHXEaF" TYPE="LVM2_member" 
+/dev/sdd: UUID="1kjaoQ-qzoL-zvMc-EqO9-cBab-YBUf-d3xYmI" TYPE="LVM2_member" 
+/dev/mapper/VolGroup00-LogVol00: UUID="886a3df7-9f88-4522-8646-47ef5d1774b2" TYPE="xfs" 
+/dev/mapper/VolGroup00-LogVol01: UUID="c39c5bed-f37c-4263-bee8-aeb6a6659d7b" TYPE="swap" 
+/dev/mapper/vg_var-lv_var_rimage_0: UUID="e90571be-9dff-4ab0-ae0e-eeba62879bab" TYPE="ext4" 
+/dev/mapper/vg_var-lv_var_rimage_1: UUID="e90571be-9dff-4ab0-ae0e-eeba62879bab" TYPE="ext4" 
+/dev/mapper/vg_var-lv_var: UUID="e90571be-9dff-4ab0-ae0e-eeba62879bab" TYPE="ext4" 
+/dev/mapper/VolGroup00-LogVol_Home: UUID="b7bf2a13-3df8-4099-8bbd-9b7e67a961d6" TYPE="xfs" 
+/dev/sdb: LABEL="btrfs_drive" UUID="ed87b5fe-a1a0-4282-89d7-f28a0e675ded" UUID_SUB="52bf840d-dd87-4011-b039-d35967cbd246" TYPE="btrfs" 
+]0;root@lvm:/[root@lvm /]# blkidmount -avi /etc/fstab 
+[?1049h[?1h=[1;17r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[17;1H"/etc/fstab" 17L, 787C[2;1H#
+# /etc/fstab
+# Created by anaconda on Sat May 12 18:50:26 2018
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/VolGroup00-LogVol00 /[23Cxfs     defaults[8C0 0
+UUID=570897ca-e759-4c81-90cf-389da6eee4cc /boot[19Cxfs     defaults[8C0 0
+/dev/mapper/VolGroup00-LogVol01 swap[20Cswap    defaults[8C0 0
+#VAGRANT-BEGIN
+# The contents below are automatically generated by Vagrant. Do not modify.
+#VAGRANT-END
+UUID="e90571be-9dff-4ab0-ae0e-eeba62879bab" /var ext4 defaults 0 0
+UUID="b7bf2a13-3df8-4099-8bbd-9b7e67a961d6" /home xfs defaults 0 0[1;1H[?12l[?25h
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[?25l[1;16r[16;1H
+[1;17r[16;1HUUID="52bf840d-dd87-4011-b039-d35967cbd246" /opt btrfs defaults 0 0[17;1H[K[16;1H[?12l[?25h[15;1H
+UUID="52bf840d-dd87-4011-b039-d35967cbd246" /op[15;48H[14;48H[15;48H[16;48H6[?25l
+[1m-- INSERT --[16;43H[?12l[?25h[?25l[m" /opt btrfs defaults 0 0[16;67H[K[16;42H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;66H[K[16;41H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;65H[K[16;40H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;64H[K[16;39H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;63H[K[16;38H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;62H[K[16;37H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;61H[K[16;36H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;60H[K[16;35H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;59H[K[16;34H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;58H[K[16;33H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;57H[K[16;32H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;56H[K[16;31H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;55H[K[16;30H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;54H[K[16;29H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;53H[K[16;28H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;52H[K[16;27H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;51H[K[16;26H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;50H[K[16;25H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;49H[K[16;24H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;48H[K[16;23H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;47H[K[16;22H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;46H[K[16;21H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;45H[K[16;20H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;44H[K[16;19H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;43H[K[16;18H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;42H[K[16;17H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;41H[K[16;16H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;40H[K[16;15H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;39H[K[16;14H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;38H[K[16;13H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;37H[K[16;12H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;36H[K[16;11H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;35H[K[16;10H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;34H[K[16;9H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;33H[K[16;8H[?12l[?25h[?25l" /opt btrfs defaults 0 0[16;32H[K[16;7H[?12l[?25h[?25l /opt btrfs defaults 0 0[16;31H[K[16;6H[?12l[?25h[?25l"" /opt btrfs defaults 0 0[16;7H[?12l[?25h[?25led87b5fe-a1a0-4282-89d7-f28a0e675ded" /opt btrfs defaults 0 0[16;43H[?12l[?25h[17;1H[K[16;42H[?25l[?12l[?25h[?25l
+:[?12l[?25hwq[?25l"/etc/fstab" 17L, 787C written
+[?1l>[?12l[?25h[?1049l]0;root@lvm:/[root@lvm /]# vi /etc/fstab [9Pblkidmount -a
+mount: mount point /opt does not exist
+]0;root@lvm:/[root@lvm /]# mount -avi /etc/fstab 
+[?1049h[?1h=[1;17r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[17;1H"/etc/fstab" 17L, 787C[2;1H#
+# /etc/fstab
+# Created by anaconda on Sat May 12 18:50:26 2018
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/VolGroup00-LogVol00 /[23Cxfs     defaults[8C0 0
+UUID=570897ca-e759-4c81-90cf-389da6eee4cc /boot[19Cxfs     defaults[8C0 0
+/dev/mapper/VolGroup00-LogVol01 swap[20Cswap    defaults[8C0 0
+#VAGRANT-BEGIN
+# The contents below are automatically generated by Vagrant. Do not modify.
+#VAGRANT-END
+UUID="e90571be-9dff-4ab0-ae0e-eeba62879bab" /var ext4 defaults 0 0
+UUID="b7bf2a13-3df8-4099-8bbd-9b7e67a961d6" /home xfs defaults 0 0[1;1H[?12l[?25h
+
+
+
+
+
+
+
+
+[9;1H[8;1H
+
+
+
+[11;1H
+
+
+
+
+[?25l[1;16r[16;1H
+[1;17r[16;1HUUID="ed87b5fe-a1a0-4282-89d7-f28a0e675ded" /opt btrfs defaults 0 0[17;1H[K[16;1H[?12l[?25hUUID="ed87b5fe-a1a0-4282-89d7-f28a0e675ded" /opt [?25l
+:[?12l[?25hq[?25l[17;1H[K[17;1H[?1l>[?12l[?25h[?1049l]0;root@lvm:/[root@lvm /]# btrfs subvolume list
+btrfs subvolume list: too few arguments
+usage: btrfs subvolume list [options] [-G [+|-]value] [-C [+|-]value] [--sort=gen,ogen,rootid,path] <path>
+
+    List subvolumes (and snapshots)
+
+    -p           print parent ID
+    -a           print all the subvolumes in the filesystem and
+                 distinguish absolute and relative path with respect
+                 to the given <path>
+    -c           print the ogeneration of the subvolume
+    -g           print the generation of the subvolume
+    -o           print only subvolumes below specified path
+    -u           print the uuid of subvolumes (and snapshots)
+    -q           print the parent uuid of the snapshots
+    -R           print the uuid of the received snapshots
+    -t           print the result as a table
+    -s           list snapshots only in the filesystem
+    -r           list readonly subvolumes (including snapshots)
+    -d           list deleted subvolumes that are not yet cleaned
+    -G [+|-]value
+                 filter the subvolumes by generation
+                 (+value: >= value; -value: <= value; value: = value)
+    -C [+|-]value
+                 filter the subvolumes by ogeneration
+                 (+value: >= value; -value: <= value; value: = value)
+    --sort=gen,ogen,rootid,path
+                 list the subvolume in order of gen, ogen, rootid or path
+                 you also can add '+' or '-' in front of each items.
+                 (+:ascending, -:descending, ascending default)
+
+]0;root@lvm:/[root@lvm /]# btrfs subvolume list -a
+btrfs subvolume list: too few arguments
+usage: btrfs subvolume list [options] [-G [+|-]value] [-C [+|-]value] [--sort=gen,ogen,rootid,path] <path>
+
+    List subvolumes (and snapshots)
+
+    -p           print parent ID
+    -a           print all the subvolumes in the filesystem and
+                 distinguish absolute and relative path with respect
+                 to the given <path>
+    -c           print the ogeneration of the subvolume
+    -g           print the generation of the subvolume
+    -o           print only subvolumes below specified path
+    -u           print the uuid of subvolumes (and snapshots)
+    -q           print the parent uuid of the snapshots
+    -R           print the uuid of the received snapshots
+    -t           print the result as a table
+    -s           list snapshots only in the filesystem
+    -r           list readonly subvolumes (including snapshots)
+    -d           list deleted subvolumes that are not yet cleaned
+    -G [+|-]value
+                 filter the subvolumes by generation
+                 (+value: >= value; -value: <= value; value: = value)
+    -C [+|-]value
+                 filter the subvolumes by ogeneration
+                 (+value: >= value; -value: <= value; value: = value)
+    --sort=gen,ogen,rootid,path
+                 list the subvolume in order of gen, ogen, rootid or path
+                 you also can add '+' or '-' in front of each items.
+                 (+:ascending, -:descending, ascending default)
+
+]0;root@lvm:/[root@lvm /]# btrfs subvolume list -a[K[K[K [K-listalist list
+btrfs subvolume: unknown token '-a'
+usage: btrfs subvolume <command> <args>
+
+    btrfs subvolume create [-i <qgroupid>] [<dest>/]<name>
+        Create a subvolume
+    btrfs subvolume delete [options] <subvolume> [<subvolume>...]
+        Delete subvolume(s)
+    btrfs subvolume list [options] [-G [+|-]value] [-C [+|-]value] [--sort=gen,ogen,rootid,path] <path>
+        List subvolumes (and snapshots)
+    btrfs subvolume snapshot [-r] [-i <qgroupid>] <source> <dest>|[<dest>/]<name>
+        Create a snapshot of the subvolume
+    btrfs subvolume get-default <path>
+        Get the default subvolume of a filesystem
+    btrfs subvolume set-default <subvolid> <path>
+        Set the default subvolume of a filesystem
+    btrfs subvolume find-new <path> <lastgen>
+        List the recently modified files in a filesystem
+    btrfs subvolume show <subvol-path>
+        Show more information of the subvolume
+    btrfs subvolume sync <path> [<subvol-id>...]
+        Wait until given subvolume(s) are completely removed from the filesystem.
+
+manage subvolumes: create, delete, list, etc
+]0;root@lvm:/[root@lvm /]# btrfs subvolume -a listlist -a[1Pa[K/dev/sdb
+ERROR: not a btrfs filesystem: /dev/sdb
+ERROR: can't access '/dev/sdb'
+]0;root@lvm:/[root@lvm /]# btrfs subvolume list /dev/sdb[C[K[K[K[K[K[K[K[K[K btrfs_drive
+ERROR: cannot access 'btrfs_drive': No such file or directory
+ERROR: can't access 'btrfs_drive'
+]0;root@lvm:/[root@lvm /]# btrfs subvolume list btrfs_drive[3P/dev/sdb[6P-a listlist -a[K[C[C[C[C[C[C[C[C[C[C[C[C[C[C[6Pvi /etc/fstab [6Pmount -avi /etc/fstab 
+[?1049h[?1h=[1;17r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[17;1H"/etc/fstab" 17L, 787C[2;1H#
+# /etc/fstab
+# Created by anaconda on Sat May 12 18:50:26 2018
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/VolGroup00-LogVol00 /[23Cxfs     defaults[8C0 0
+UUID=570897ca-e759-4c81-90cf-389da6eee4cc /boot[19Cxfs     defaults[8C0 0
+/dev/mapper/VolGroup00-LogVol01 swap[20Cswap    defaults[8C0 0
+#VAGRANT-BEGIN
+# The contents below are automatically generated by Vagrant. Do not modify.
+#VAGRANT-END
+UUID="e90571be-9dff-4ab0-ae0e-eeba62879bab" /var ext4 defaults 0 0
+UUID="b7bf2a13-3df8-4099-8bbd-9b7e67a961d6" /home xfs

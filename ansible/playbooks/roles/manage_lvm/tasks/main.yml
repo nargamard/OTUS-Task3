@@ -1,0 +1,374 @@
+---
+# Установим пакет xfsdump
+- name: Install xfsdump
+  yum:
+    name: xfsdump
+    state: latest
+
+# Создадим vg "vg_root" на диске /dev/sdb. PV при этом будет создан автомтически.
+- name: Create a volume group /dev/sdb
+  community.general.lvg:
+    vg: vg_root
+    pvs: /dev/sdb
+
+# Создадим LV "lv_root" в VG "vg_root" на 100% места
+- name: Create a logical volume the size of 100% remaining space in the volume group
+  community.general.lvol:
+    vg: vg_root
+    lv: lv_root
+    size: 100%FREE
+
+# Создаём на LV "lv_root" файловую систему
+- name: make fs on lv_root
+  filesystem: 
+    fstype: xfs
+    dev: /dev/vg_root/lv_root
+
+# Монтируем LV "lv_root"
+- name: mount LV "lv_root"
+  mount: 
+    path: /mnt
+    src: /dev/vg_root/lv_root
+    state: mounted
+    fstype: xfs
+
+# Скопируем все данные с / раздела в /mnt
+- name: Copy / into /mnt
+  shell: xfsdump -J - /dev/VolGroup00/LogVol00 | xfsrestore -J - /mnt
+  register: xfs_dump_log
+
+# Посмотрим вывод команды xfsdump
+- name: Get xfs_dump_log
+  debug:
+    var: xfs_dump_log.stdout
+
+# Монтируем текущий root -> сделаем в него chroot
+- name: Mounting /
+  shell: for i in /proc/ /sys/ /dev/ /run/ /boot/; do mount --bind $i /mnt/$i; done
+
+- name: Mounting /
+  copy: 
+    src: runscript.sh
+    dest: /home/vagrant/runscript.sh
+    owner: vagrant
+    group: vagrant
+    mode: '777'
+
+# - name: try attach second disk
+#   shell: ssh vagrant@192.168.56.10 sudo /home/vagrant/runscript.sh
+#   become_user: user
+#   delegate_to: localhost
+
+
+# - name: Create the chroot wrapper
+#   copy:
+#     dest: "/usr/local/sbin/chroot_{{inventory_hostname_short}}"
+#     mode: 0755
+#     content: |
+#       #!/bin/sh -e
+#       exec chroot /mnt /usr/bin/python3 "$@"
+
+# - name: Continue with stage 2 inside the chroot
+#   shell: ansible-playbook /home/user/Nextcloud/Документы/OTUS/OTUS-Task3/ansible/playbooks/roles/therealplaybook.yaml -l {{inventory_hostname}} -e ansible_python_interpreter=/usr/local/sbin/chroot_{{inventory_hostname_short}}
+#     # msg:
+#     #   - "Please run:"
+#     #   - "ansible-playbook /home/user/Nextcloud/Документы/OTUS/OTUS-Task3/ansible/playbooks/roles/therealplaybook.yaml -l {{inventory_hostname}} -e ansible_python_interpreter=/usr/local/sbin/chroot_{{inventory_hostname_short}}"
+
+
+
+
+
+# - name: Chrooting /
+#   shell: chroot /mnt/
+
+# # Переконфигурируем GRUB
+# - name: Configuring GRUB /
+#   shell: grub2-mkconfig -o /boot/grub2/grub.cfg
+
+# # Меняем раздел в grub.cfg
+# - name: Change grub.cfg
+#   shell: sed -i 's/rd.lvm.lv=VolGroup00\/LogVol00/rd.lvm.lv=vg_root\/lv_root/g' /boot/grub2/grub.cfg
+
+
+
+#Перезагружаем машину
+- name: Reboot
+  reboot:
+
+
+
+
+# # Выведем сведения о VG rd.lvm.lv=VolGroup00/LogVol00
+# - name: Print VG information
+#   debug:
+#     var: vg_info.stdout
+
+
+
+
+# ### СОЗДАНИЕ VG, LV
+
+# # Создадим vg otus на диске /dev/vdb. PV при этом будет создан автомтически.
+# - name: Create a volume group /dev/vdb
+#   community.general.lvg:
+#     vg: otus
+#     pvs: /dev/vdb
+
+# # Создадим LV "test" в VG "otus" на 80% места
+# - name: Create a logical volume the size of 80% remaining space in the volume group
+#   community.general.lvol:
+#     vg: otus
+#     lv: test
+#     size: 80%FREE
+
+# # Посмотрим информацию о VG "otus"
+# - name: Get disk information
+#   shell: vgdisplay otus
+#   register: vg_info
+
+# # Выведем сведения о VG 
+# - name: Print VG information
+#   debug:
+#     var: vg_info.stdout
+
+# # Создадим второй LV "small" в VG "otus" на 100Мб
+# - name: Create a logical volume the size of 80% remaining space in the volume group
+#   community.general.lvol:
+#     vg: otus
+#     lv: small
+#     size: 100m
+
+# # Посмотрим информацию о LV
+# - name: Get disk information
+#   shell: lvs
+#   register: lv_info
+
+# # Выведем сведения о VG 
+# - name: Print LV information
+#   debug:
+#     var: lv_info.stdout
+
+# # Создаём на LV "test" файловую систему
+# - name: make fs on md0
+#   filesystem: 
+#     fstype: ext4
+#     dev: /dev/otus/test
+
+# # Монтируем LV "test"
+# - name: mount LV "test"
+#   mount: 
+#     path: /data
+#     src: /dev/otus/test
+#     state: mounted
+#     fstype: ext4
+
+# # Посмотрим информацию о примонтированом разделе LV "test"
+# - name: Get mount information
+#   shell: mount | grep /data
+#   register: mount_info
+
+# # Выведем сведения о примонтированом разделе LV "test" 
+# - name: Print mount information
+#   debug:
+#     var: mount_info.stdout
+
+# ### ДОБАВЛЕНИЕ ВТОРОГО ДИСКА В VG
+
+# # Добавим в VG второй диск (/dev/vdc) 
+# - name: Add disk /dev/vdc into VG "test"
+#   community.general.lvg:
+#     vg: otus
+#     pvs: /dev/vdb,/dev/vdc
+
+# # Посмотрим информацию о физических дисках в VG "test"
+# - name: Get mount information
+#   shell: vgdisplay -v otus | grep 'PV Name'
+#   register: vg_2pv_info
+
+# # Выведем сведения о о физических дисках в VG "test"
+# - name: Print mount information
+#   debug:
+#     var: vg_2pv_info.stdout
+
+# # Посмотрим информацию о месте в VG
+# - name: Get disk information
+#   shell: lvs
+#   register: vg_space_info
+
+# # Выведем сведения о месте в VG
+# - name: Print LV information
+#   debug:
+#     var: vg_space_info.stdout
+
+# # Заполним папку /data, куда примонтирован LV "test"
+# - name: Write file content
+#   shell: dd if=/dev/zero of=/data/test.log bs=1M count=8000 status=progress
+
+# # Посмотрим информацию о месте в /data
+# - name: Get disk information
+#   shell: df -Th /data/
+#   register: data_space_info
+
+# # Выведем сведения о месте в /data
+# - name: Print LV information
+#   debug:
+#     var: data_space_info.stdout
+
+# ### РАСШИРЕНИЕ LV
+
+# # Расширим LV снова до 80% от всего места в VG, которого стало больше за счет второго физического диска
+# - name: Extend a logical volume the size of 80% remaining space in the volume group
+#   community.general.lvol:
+#     vg: otus
+#     lv: test
+#     size: 80%FREE
+
+# # Увеличим файловую систему на LV
+# - name: Extend the FS
+#   filesystem:
+#     fstype: ext4
+#     dev: /dev/otus/test
+#     resizefs: yes
+
+# # Посмотрим информацию о новом размере /data
+# - name: Get disk information
+#   shell: df -Th /datat
+#   register: data_new_space_info
+
+# # Выведем сведения о новом размере /data
+# - name: Print LV information
+#   debug:
+#     var: data_new_space_info.stdout
+
+# ### УМЕНЬШЕНИЕ LV
+
+# # Отмонтируем /data
+
+# - name: unmount /data
+#   mount: 
+#     path: /data
+#     state: unmounted
+
+# # Проверим файловую систему и уменьшим её размер
+# - name: Check and resize FS 
+#   shell: e2fsck -fy /dev/otus/test && resize2fs /dev/otus/test 10G
+
+# # Уменьшим раздел LV
+# - name: Reduce the logical volume to 10G
+#   community.general.lvol:
+#     vg: otus
+#     lv: test
+#     size: 10G
+#     force: true
+
+# # Снова монтируем LV "test"
+# - name: mount LV "test"
+#   mount: 
+#     path: /data
+#     src: /dev/otus/test
+#     state: mounted
+#     fstype: ext4
+
+# # Посмотрим информацию о примонтированом разделе LV "test"
+# - name: Get mount information
+#   shell: mount | grep /data
+#   register: mount_info
+
+# # Выведем сведения о примонтированом разделе LV "test" 
+# - name: Print mount information
+#   debug:
+#     var: mount_info.stdout
+
+# # Посмотрим информацию о новом размере /data
+# - name: Get disk information
+#   shell: df -Th /datat
+#   register: data_new_space_info
+
+# # Выведем сведения о новом размере /data
+# - name: Print LV information
+#   debug:
+#     var: data_new_space_info.stdout
+
+# # Посмотрим информацию о LV
+# - name: Get LV information
+#   shell: lvs /dev/otus/test
+#   register: lv_resized_info
+
+# # Выведем сведения о LV 
+# - name: Print LV information
+#   debug:
+#     var: lv_resized_info.stdout
+
+
+
+
+# # # Пробуем создать массив. Надо бы сначала проверить, есть ли он, создавать только если есть, но сделаю через block-rescue
+# # - name: try create raid10
+# #   block:
+# #     - name: create raid10
+# #       shell: "yes | mdadm --create /dev/md0 -l 10 -n 4 /dev/vdb /dev/vdc /dev/vdd /dev/vde"
+# #   rescue:
+# #     - name: Message "raid was created early"
+# #       debug:
+# #         msg: "raid was created early"  
+
+# # # Создаём файловую систему через filesystem дабы избежать "зашеливания" плейбука, и так уже везде этот shell, который ещё и надо пасти, чтобы корректно отображались результаты "changed" и "ok"
+# # - name: make fs on md0
+# #   filesystem: 
+# #     fstype: ext4
+# #     dev: /dev/md0
+
+# # # Монтируем массив
+# # - name: mount md0
+# #   mount: 
+# #     path: /mnt/md0
+# #     src: /dev/md0
+# #     state: mounted
+# #     fstype: ext4
+
+# # # Пишем строчку в файлик на массиве
+# # - name: Write file content
+# #   shell: echo "Hello from raid10!" > /mnt/md0/file
+
+# # # Помечаем один из дисков сбойным и вынимаем его
+# # - name: try create raid10
+# #   shell: "mdadm --manage /dev/md0 --fail /dev/vdb && mdadm --manage /dev/md0 --remove /dev/vdb"
+
+# # # Добавляем диск обратно. Надо бы другой, но в ЯО есть ограничение на число дисков. 
+# # - name: try rebuild raid10
+# #   shell: "mdadm --manage /dev/md0 --add /dev/vdf "
+
+# # # Ждём минуту пока массив пересоберётся
+# # - name: Pause for 1 minut
+# #   pause:
+# #     minutes: 1
+
+# # # Получим сведения об дисках 
+# # - name: Get disk information
+# #   shell: lsblk
+# #   register: disk_info
+
+# # # Выведем сведения об дисках 
+# # - name: Print disk information
+# #   debug:
+# #     var: disk_info.stdout
+
+# # # Получим сведения о массиве 
+# # - name: Get raid information
+# #   shell: mdadm -D /dev/md0
+# #   register: raid_info
+
+# # # Выведем сведения об массиве 
+# # - name: Print disk information
+# #   debug:
+# #     var: raid_info.stdout
+
+# # # Читаем содержимое файлика
+# # - name: Read file content
+# #   shell: cat /mnt/md0/file
+# #   register: file_content
+
+# # # И выводим это содержимое
+# # - name: Show file content
+# #   debug:
+# #     var: file_content.stdout
